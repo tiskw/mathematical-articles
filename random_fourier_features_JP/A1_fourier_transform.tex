@@ -1,0 +1,97 @@
+% TeX source
+%
+% Author: Tetsuya Ishikawa <tiskw111@gmail.com>
+% Date  : October 03, 2020
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+本節では，定理証明の際に省略したFourier変換およびParsevalの等式の解説を行う．
+本節でも数学的シンプルさを優先して周波数ベースのFourier変換を用いることとする．
+
+\subsection*{Fourier変換に関する補足}
+
+Fourier変換の定義としては本文の式(\ref{eqn:def_fourier_transform})で十分だが，
+より良い表記，より深い理解のために，Fourier変換を関数空間の内積を用いて表現してみよう．
+まず関数$\eta_{\xi}(x)$を
+\begin{equation}
+    \eta_{\xi}(x) \triangleq e^{2\pi i x \xi},
+\end{equation}
+と定義する．次に関数の内積$\langle \cdot, \cdot \rangle$を最も標準的な内積演算
+\begin{equation}
+    \langle f, g \rangle \triangleq \int_{-\infty}^{\infty} f(x) g^*(x) \, \mathrm{d}x,
+\end{equation}
+で定めるとしよう．ただし$g^*(x)$は関数$g(x)$の複素共役である．
+このとき式(\ref{eqn:def_fourier_transform})で表現でされるFourier変換は
+\begin{equation}
+    \mathcal{F}[f](\xi) = \langle f, \eta_{\xi} \rangle,
+\end{equation}
+と表すことができる．
+このとき関数群$\{ \eta_{\xi}(x) \,|\, \xi \in \mathbb{R} \}$は正規直交基底と非常に似た性質を持つ．すなわち
+\begin{equation}
+    \langle \eta_{\xi_1}, \eta_{\xi_2} \rangle = \delta(\xi_1 - \xi_2),
+\end{equation}
+が成り立つ．ただし$\delta$はDiracのデルタ関数 (\textit{Dirac delta function}) である．
+したがってFourier変換は正規直交基底との内積，つまるところただの基底交換のようなもの，と見ることもできるのである．
+
+\begin{displayquote}\footnotesize\textsf{NOTE:}
+    Fourier変換の定義を初めて見た若かりし頃，諸君らも
+    「何でFourier変換が逆回転$e^{-2\pi i x \xi}$で逆Fourier変換が順回転$e^{2\pi i x \xi}$なんだよ，フツーは逆だろ！」
+    とキレかかった経験があるのではないだろうか．上述の内積によるFourier変換の理解はこの疑問を解消してくれる．
+    そう，基底$\eta_{\xi}(x)$はちゃんと順回転$e^{2\pi i x \xi}$で定義されていたのだ．
+    しかし内積を計算する際に共役をとる必要があり，そこで回転方向が反転したのである．少しはスッキリしたであろうか．
+\end{displayquote}
+
+\subsection*{Fourier変換の収束性について}
+
+Parsevalの等式の証明に移る前に，読者が気になっているであろう
+Fourier変換の定義式(\ref{eqn:def_fourier_transform})の収束性について簡単に述べておこう．
+つまり，式(\ref{eqn:def_fourier_transform})が定義できるのはどんな関数か？という問題である．
+結論から言えば，式(\ref{eqn:def_fourier_transform})が収束する条件は
+\begin{equation}
+    \int_{-\infty}^{\infty} |f(x)| \, \mathrm{d}x < \infty,
+\end{equation}
+である．ハッキリ言って，上式を満たす関数は応用上の観点から見ても非常に少ない．
+例えば三角関数や指数関数ですら上式の制約は満たさない．
+とはいえ少なくとも応用上必要な関数に対してはFourier変換ができないと困る．
+この問題に対するアプローチは様々あるが，著者の知る限り，多くの人の理解は以下の(1)の方法で理解していると思われる．
+初学者は(1)の理解で良いであろう．ちなみに著者は理論的にも便利な(2)で理解している．興味があれば調べてみると良い．
+\begin{enumerate}
+    \item[(1)] 扱う関数はすべて有限の台を持つと仮定する方法．
+               関数の台が有限であれば，応用上必要な関数はほぼすべて積分可能となる．
+    \item[(2)] 両側Laplace変換の特殊な場合 ($s = i\omega$) としてFourier変換を定義する方法である．
+               実は両側Laplace変換は，解析接続を用いた巧妙な仕組みにより，非常に幅広い関数に対して定義可能である．
+\end{enumerate}
+
+\subsection*{Parsevalの等式}
+
+次にParsevalの等式 (\textit{Parseval's identity}) について見ていこう．
+一般にParsevalの等式と言うと$\|f\|^2 = \|\widehat{f}\|^2$を指すことも多いが，本文書ではより一般的な形の定理を証明する．
+Fourier変換が正規直交基底を用いた基底の交換であることが分かれば，ほぼ自明な定理である．
+
+\begin{theorem}[Parsevalの等式]
+    任意のFourier変換可能な関数$f$, $g$およびそのFourier変換$\widehat{f}$, $\widehat{g}$に対して
+    $\langle f, g \rangle = \langle \widehat{f}, \widehat{g} \rangle$が成り立つ．
+\end{theorem}
+\begin{proof}
+    証明は直接計算による．
+    \begin{align*}
+        \langle \widehat{f}, \widehat{g} \rangle
+        &= \int_{-\infty}^{-\infty} \langle f, \eta_{\xi} \rangle \langle g, 
+        \eta_{\xi} \rangle \, \mathrm{d}\xi \\
+        &= \iiint_{-\infty}^{-\infty}  f(x_1) g(x_2) \eta_{\xi}(x_1) \eta_{\xi}(x_2)
+        \, \mathrm{d}x_1 \mathrm{d}x_2 \mathrm{d}\xi \\
+        \intertext{ここで$\eta_{\xi}(x_1) \eta_{\xi}(x_2) = \eta_{x_1}(\xi) \eta_{x_2}(\xi)$に注意すれば}
+        &= \iint_{-\infty}^{-\infty}  f(x_1) g(x_2)
+        \langle \eta_{x_1}, \eta_{x_2} \rangle \, \mathrm{d}x_1 \mathrm{d}x_2 \\
+        \intertext{関数$\eta_{x}(\xi)$の正規直交性に注意すれば
+        $\langle \eta_{x_1}, \eta_{x_2} \rangle$は$\delta(x_1 - x_2)$であるから}
+        &= \int_{-\infty}^{-\infty}  f(x) g(x) \, \mathrm{d}x
+        = \langle f, g \rangle,
+    \end{align*}
+    となり，題意が成り立つ．
+\end{proof}
+
+ここまで読み進めた読者には指摘するまでもないであろうが，
+上記定理の特殊な場合として$f = g$とおけば，良く知られた$\|f\|^2 = \|\widehat{f}\|^2$を得る．
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE FINISH %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vim: expandtab tabstop=4 shiftwidth=4 fdm=marker

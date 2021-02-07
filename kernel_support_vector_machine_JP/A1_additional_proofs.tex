@@ -1,0 +1,59 @@
+% TeX source
+%
+% Author: Tetsuya Ishikawa <tiskw111@gmail.com>
+% Date  : Aug  4, 2019
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{シュワルツの不等式}
+
+関数空間$L^2$上の内積の性質としてシュワルツの不等式（\textit{Schwarz inequality}）を紹介したが，
+これ再掲し証明しよう．
+
+\begin{theorem}[シュワルツの不等式]
+関数空間$L^2$に対し，$f, g \in L^2$, $a, b \in \mathbb{R}$とする．
+このとき
+\begin{equation}
+\langle f, g \rangle = \| f \| \, \| g \|,
+\end{equation}
+が成り立つ．
+\end{theorem}
+\begin{proof}
+任意の$\alpha, \beta \in \mathbb{R}$に対して
+$2 \alpha \beta \leq \alpha^2 + \beta^2$が成り立つことは明らかであるから，
+$\alpha = f(x) / \| f \|$, $\beta = g(x) / \| g \|$とおけば
+\begin{equation}
+    \frac{2 f(x) g(x)}{\| f \| \, \| g \|}
+    \leq \frac{f(x)^2}{\| f \|^2} + \frac{g(x)^2}{\| g \|^2},
+\end{equation}
+が成り立つ．上式の両辺を区間$(-\infty, \infty)$で積分すれば，
+\begin{equation}
+    \frac{2 \langle f, g \rangle}{\| f \| \, \| g \|}
+    \leq \frac{\| f \|^2}{\| f \|^2} + \frac{\| g \|^2}{\| g \|^2} = 2,
+\end{equation}
+を得る．上式より示すべき式は直ちに導かれる．
+\end{proof}
+
+
+\subsection*{三角不等式}
+
+関数空間$L^2$上のノルムの性質として三角不等式を紹介したが，これ再掲し証明しよう．
+
+\begin{theorem}[三角不等式]
+関数空間$L^2$に対し，$f, g \in L^2$とする．このとき
+\begin{equation}
+    \| f + g \| \leq \| f \| + \| g \|,
+\end{equation}
+が成り立つ．
+\end{theorem}
+\begin{proof}
+シュワルツの不等式によれば
+\begin{equation}
+\| f + g \|^2
+\leq \| f \|^2 + \langle f, g \rangle + \| g \|^2
+= \left( \| f \|^2 + \| g \|^2 \right)^2,
+\end{equation}
+が成り立つ．よって証明すべきは明らか．
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE FINISH %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vim: expandtab shiftwidth=4 tabstop=4 filetype=tex

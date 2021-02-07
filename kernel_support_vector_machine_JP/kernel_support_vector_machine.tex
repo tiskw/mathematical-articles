@@ -1,0 +1,82 @@
+% TeX source
+%
+% Author: Tetsuya Ishikawa <tiskw111@gmail.com>
+% Date  : Aug  4, 2019
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[uplatex, twocolumn, a4paper, 10pt, dvipdfmx]{jsarticle}
+
+\usepackage[dvipdfm,width=190truemm,height=270truemm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{helvet}
+\usepackage[sourcehan, unicode]{pxchfon}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{thmbox}
+\usepackage{csquotes}
+
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\mbar}{\hspace{1pt}\bigm|\hspace{1pt}}
+\newcommand{\tran}{^{\mkern-1.5mu\mathsf{T}}}
+\DeclareMathOperator*{\sgn}{sgn}
+\DeclareMathOperator*{\Sgn}{Sgn}
+\DeclareMathOperator*{\argmin}{argmin}
+
+\newtheorem[M]{theorem}{定理}[section]
+\newtheorem[M]{definition}[theorem]{定義}
+\newtheorem[M]{lemma}[theorem]{補題}
+
+\renewenvironment{proof}%
+{\textsf{証明}：}%
+{\hfill$\blacksquare$\vspace*{8pt}}
+
+\newenvironment{note}%
+{\begin{displayquote}\footnotesize\textsf{NOTE:}}%
+{\end{displayquote}}
+
+\newcommand{\titlebar}{
+\setlength\unitlength{1truemm}
+\vspace*{-19pt}
+\begin{picture}(88,0)(0,0)
+\put(-4,0){\line(1,0){93}}
+\put(89,0){\circle*{1}}
+\end{picture}}
+
+\begin{document}
+
+\title{\textgt{サポートベクターマシンとカーネル回帰}}
+\author{石川 徹也 \quad \texttt{<tiskw111@gmail.com>}}
+\maketitle
+
+\section*{はじめに}
+\titlebar
+\input{00_introduction.tex}
+
+\section{線形サポートベクターマシン}
+\titlebar
+\input{01_linear_support_vector_machine.tex}
+
+\section{カーネル回帰と関数解析}
+\titlebar
+\input{02_functional_analysis.tex}
+
+\section{カーネルサポートベクターマシン}
+\titlebar
+\input{03_kernel_support_vector_machine.tex}
+
+\section*{付録：本文で省略した証明}
+\titlebar
+\input{A1_additional_proofs.tex}
+
+\section*{おわりに}
+\titlebar
+\input{98_closing.tex}
+
+\pagebreak
+
+\input{99_bibliography.tex}
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE FINISH %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vim: expandtab shiftwidth=4 tabstop=4 filetype=tex

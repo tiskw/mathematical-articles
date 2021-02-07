@@ -1,0 +1,58 @@
+% TeX source
+%
+% Author: Tetsuya Ishikawa <tiskw111@gmail.com>
+% Date  : Aug  4, 2019
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{カーネル回帰の定式化}
+
+カーネル回帰の定式化が理解出来ていれば，K-SVMの定式化は容易である．
+K-SVMは，一般化されたSVM(\ref{eqn:general_svm_1})-(\ref{eqn:general_svm_3})
+における$f_w(\bs{x})$をカーネル回帰に置きかえたものであり，
+結局のところ，最適化問題(\ref{eqn:general_svm_3})を解くことに帰着される．
+まずは$f_w(\bs{x})$をカーネル回帰に置きかえた最適化問題(\ref{eqn:general_svm_3})を明らかにしよう．
+式(\ref{eqn:kernel_reg_curve})を最適化問題(\ref{eqn:general_svm_3})に代入し，
+さらに正則化項を付加すると
+\begin{equation}\begin{split}
+    \min_{\xi_i, a_i \in \mathbb{R}} \hspace{6pt}& \sum_{i \in \mathcal{I}} \xi_i
+    + \lambda \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{I}} a_i k_{ij} a_j, \\
+    \text{s.t.} \hspace{6pt}
+    & \xi_i \geq 1 - y_i \sum_{j \in \mathcal{I}} k_{ij} a_j, \hspace{ 5pt} \text{for all $i \in \mathcal{I}$}, \\
+    & \xi_i \geq 0,                                           \hspace{65pt} \text{for all $i \in \mathcal{I}$},
+\end{split}\end{equation}
+となり，さらにこれを行列形式にまとめると
+\begin{equation}\begin{split}
+    \label{eqn:ksvm}
+    \min_{\bs{\xi}, \bs{a} \in \mathbb{R}^N} \hspace{6pt}& \bs{1}\tran \bs{\xi} + \lambda \bs{a}\tran \bs{Ka}, \\
+    \text{s.t.} \hspace{6pt}
+    & \bs{\xi} \geq \bs{1} - \bs{La}, \\
+    & \bs{\xi} \geq \bs{0},
+\end{split}\end{equation}
+となる．ただし
+\begin{align}
+    \bs{\xi} \triangleq
+    \begin{pmatrix}
+        \xi_1 \\ \vdots \\ \xi_n
+    \end{pmatrix},
+    \hspace{7pt}
+    \bs{L} \triangleq
+    \begin{pmatrix}
+        y_1 k_{11} & \cdots & y_1 k_{1n} \\
+        \vdots     & \ddots & \vdots     \\
+        y_n k_{n1} & \cdots & y_n k_{nn}
+    \end{pmatrix}
+\end{align}
+である．
+式(\ref{eqn:ksvm})は2次計画問題に帰着することができ，
+かつ行列$\bs{K}$が正定値行列であることから（これはカーネル関数が正定値関数であることから直ちにしたがう），
+最適解は唯一存在し，また数値的にも安定して解くことができる．
+
+
+\subsection{カーネルサポートベクターマシンのPython実装}
+
+K-SVMは先にも紹介したLIBSVMやscikit-learnから利用可能である．
+特にscikit-learnは統一的なインタフェースで様々な機械学習アルゴリズムが利用可能となっており，
+実応用上はこちらのパッケージを利用するのが良い．
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE FINISH %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vim: expandtab shiftwidth=4 tabstop=4 filetype=tex

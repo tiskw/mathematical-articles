@@ -1,0 +1,88 @@
+% TeX source
+%
+% Author: Tetsuya Ishikawa <tiskw111@gmail.com>
+% Date  : Aug  4, 2019
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[uplatex, twocolumn, a4paper, 10pt, dvipdfmx]{jsarticle}
+
+\usepackage[dvipdfm,width=190truemm,height=270truemm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{helvet}
+\usepackage[sourcehan, unicode]{pxchfon}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{thmbox}
+\usepackage{csquotes}
+
+\allowdisplaybreaks
+
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\mbar}{\hspace{1pt}\bigm|\hspace{1pt}}
+\newcommand{\tran}{^{\mkern-1.5mu\mathsf{T}}}
+\DeclareMathOperator*{\sgn}{sgn}
+\DeclareMathOperator*{\Sgn}{Sgn}
+\DeclareMathOperator*{\argmin}{argmin}
+
+\newtheorem[M]{theorem}{定理}[section]
+\newtheorem[M]{definition}[theorem]{定義}
+\newtheorem[M]{lemma}[theorem]{補題}
+
+\renewenvironment{proof}%
+{\textsf{証明}：}{\hfill$\blacksquare$\vspace*{8pt}}
+
+\newcommand{\titlebar}{
+\setlength\unitlength{1truemm}
+\vspace*{-19pt}
+\begin{picture}(88,0)(0,0)
+\put(-4,0){\line(1,0){93}}
+\put(89,0){\circle*{1}}
+\end{picture}}
+
+\begin{document}
+
+\title{\textsf{\bfseries Random Fourier Features}}
+\author{石川 徹也 \quad \texttt{<tiskw111@gmail.com>}}
+\date{2020年3月3日}
+\maketitle
+
+\section*{はじめに}
+\titlebar
+\input{00_introduction.tex}
+
+\section{なぜRFFが必要なのか？}
+\titlebar
+\input{01_why_rff.tex}
+
+\section{カーネルとは？}
+\titlebar
+\input{02_kernel_method_overview.tex}
+
+\section{カーネルの有限近似}
+\titlebar
+\input{03_random_fourier_features.tex}
+
+\section{数値実験}
+\titlebar
+\input{04_numerical_example.tex}
+
+\section{定理の証明}
+\titlebar
+\input{05_proof.tex}
+
+\section*{付録：Fourier変換}
+\titlebar
+\input{A1_fourier_transform.tex}
+
+\section*{おわりに}
+\titlebar
+\input{98_closing.tex}
+
+% \pagebreak
+
+\input{99_bibliography.tex}
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE FINISH %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vim: expandtab shiftwidth=4 tabstop=4 filetype=tex

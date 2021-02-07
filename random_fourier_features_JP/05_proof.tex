@@ -1,0 +1,133 @@
+% TeX source
+%
+% Author: Tetsuya Ishikawa <tiskw111@gmail.com>
+% Date  : October 03, 2020
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+本節では，本文書で証明せずに残してあった定理を証明する．
+前節までは，原論文に合わせるために角周波数ベースのFourier変換を用いて議論をしていたが，
+以下では数学的シンプルさを優先して周波数ベースのFourier変換を用いることとする．
+
+\subsection*{Fourier変換とParsevalの等式}
+
+まずはFourier変換について簡単におさらいしておこう．本節ではFourier変換の定義として
+\begin{equation}
+    \mathcal{F}[f](\xi) \triangleq \int_{-\infty}^{\infty}
+    f(x) e^{-2\pi i x \xi} \, \mathrm{d}x,
+    \label{eqn:def_fourier_transform}
+\end{equation}
+を採用する．この時，逆Fourie変換は
+\begin{equation}
+    \mathcal{F}^{-1}[\widehat{f}](x) \triangleq \int_{-\infty}^{\infty}
+    \widehat{f}(\xi) e^{2\pi i x \xi} \, \mathrm{d}\xi,
+\end{equation}
+となる．原論文で用いられている角周波数ベースのFourier変換とはスカラー倍の違いがあるだけで，本質的には同一である．
+多変数関数$f(\bs{x}), \bs{x} \in \mathbb{R}^M$のFourier変換および逆Fourie変換は
+\begin{align}
+    \mathcal{F}[f](\bs{\xi}) &\triangleq \int_{-\infty}^{\infty}
+    f(x) e^{-2\pi i \bs{x}\tran \bs{\xi}} \, \mathrm{d}\bs{x}, \\
+    \mathcal{F}^{-1}[\widehat{f}](\bs{x}) &\triangleq \int_{-\infty}^{\infty}
+    \widehat{f}(\bs{\xi}) e^{2\pi i \bs{x}\tran \bs{\xi}} \, \mathrm{d}\bs{\xi},
+\end{align}
+となる．ただし記号$\mathrm{d}\bs{x}$は$\mathrm{d}x_1 \mathrm{d}x_2 \cdots \mathrm{d}x_M$
+の略記であることに注意せよ．
+
+\begin{displayquote}\footnotesize\textsf{NOTE:}
+    Lebesgue測度論の慣習に従えば，この$\mathrm{d}\bs{x}$は本来
+    $\mu(\mathrm{d}\bs{x})$あるいは$\mathrm{d}\mu(\bs{x})$と表記されるべきものである．
+    ただし$\mu$はLebesgue測度である．だが表記の冗長さと，測度論に立ち入り結論に辿り着くまでの時間が
+    長くなることで読者の興味が薄れることを恐れ，ここでは上記の略記を用いた．
+    ゴマカシだという謗りは受けて然るべきである．より良いアプローチがあればぜひご連絡頂きたい．
+\end{displayquote}
+
+オイオイ，式(\ref{eqn:def_fourier_transform})が定義できる関数$f$なんてかなり少なくないかと思ったそこの読者，
+非常に良い眼をお持ちである．式(\ref{eqn:def_fourier_transform})の収束性については本文書末尾の付録で簡単に言及する．
+
+次にParsevalの等式 (\textit{Parseval's identity}) について見ていこう．
+一般にParsevalの等式と言うと$\|f\|^2 = \|\widehat{f}\|^2$を指すことも多いが，本文書ではより一般的な形の定理を紹介する．
+
+\begin{theorem}[Parsevalの等式]
+    任意のFourier変換可能な関数$f$, $g$およびそのFourier変換$\widehat{f}$, $\widehat{g}$に対して
+    $\langle f, g \rangle = \langle \widehat{f}, \widehat{g} \rangle$が成り立つ．
+\end{theorem}
+
+ここではParsevalの等式の証明は省略する．
+証明が気になる読者は（そうあるべきである！）本文書末尾の付録を参照されたい．
+
+\subsection*{定理の証明}
+
+定理を再掲し証明しよう．
+
+\begin{theorem}[平行移動不変な正定値カーネルのFourier変換]
+    正定値カーネル関数$k(\bs{x}, \bs{y})$が平行移動不変，すなわち$k(\bs{x}, \bs{y}) = k_{\Delta}(\bs{x} - \bs{y})$
+    をみたす関数$k_{\Delta}$が存在したとする．このとき，カーネル関数$k_{\Delta}(\bs{x} - \bs{y})$のFourier変換は
+    $L_1$ノルムの意味で可積分であり，かつ非負関数である．
+\end{theorem}
+\begin{proof}
+    以下，$\bs{x}$, $\bs{y}$の次元を$M$とし，$\mathcal{X} = \mathbb{R}^M$とおく．すなわち$\bs{x}, \bs{y} \in \mathcal{X}$である．
+    カーネル関数$k$の対称性より
+    \begin{equation}
+        k_{\Delta}(\bs{x}) = k(\bs{x}/2, -\bs{x}/2) = k(-\bs{x}/2, \bs{x}/2) = k_{\Delta}(-\bs{x})
+    \end{equation}
+    が成り立つ．これを用いれば$k_{\Delta}$のFourier変換は実数値関数であることがわかる．
+    なぜならば$k_{\Delta}$のFourier変換の複素共役を計算してみると
+    \begin{align}
+        \mathcal{F}[k_{\Delta}]^*(\bs{\xi})
+        &= \int_{\mathcal{X}} k_{\Delta}(\bs{x}) e^{2\pi i \bs{x}\tran\bs{\xi}} \, \mathrm{d}\bs{x} \\
+    \intertext{ここで$\bs{x} = - \bs{z}$と置換すれば}
+        &= \int_{\mathcal{X}} k_{\Delta}(-\bs{z}) e^{-2\pi i \bs{z}\tran\bs{\xi}} \, \mathrm{d}\bs{z} \\
+        &= \int_{\mathcal{X}} k_{\Delta}(\bs{z}) e^{-2\pi i \bs{z}\tran\bs{\xi}} \, \mathrm{d}\bs{z}
+        = \mathcal{F}[k_{\Delta}](\bs{\xi}),
+    \end{align}
+    となり，複素共役をとる前のFourier変換と一致する．したがって$\mathcal{F}[k_{\Delta}](\bs{\xi})$は少なくとも実数値関数である．
+    次に，カーネル関数$k$が正定値関数であることから，任意の実数値関数$y$について
+    \begin{equation}
+        \iint_{\mathcal{X} \times \mathcal{X}} y(\bs{x}_1) k(\bs{x}_1, \bs{x}_2) y(\bs{x}_2)
+        \, \mathrm{d}\bs{x}_1 \mathrm{d}\bs{x}_2 \geq 0,
+    \end{equation}
+    が成り立つ．上式の左辺を変形すると
+    \begin{align}
+        & \iint_{\mathcal{X} \times \mathcal{X}} y(\bs{x}_1) k(\bs{x}_1, \bs{x}_2) y(\bs{x}_2)
+        \, \mathrm{d}\bs{x}_1 \mathrm{d}\bs{x}_2 \\
+        =& \int_{\mathcal{X}} y(\bs{x}_1) \langle k(\bs{x}_1, \cdot), y \rangle \, \mathrm{d}\bs{x}_1 \\
+    \intertext{ここで内積$\langle k(\bs{x}_1, \cdot), y \rangle$に対してパーセバルの不等式を用いる．
+    新たに$\widehat{k}_{\bs{x}_1}(\bs{\xi}_2) = \mathcal{F}[k(\bs{x}_1, \cdot)](\bs{\xi}_2)$とおくと}
+        =& \int_{\mathcal{X}} y(\bs{x}_1) \langle \widehat{k}_{\bs{x}_1}, \widehat{y} \rangle \, \mathrm{d}\bs{x}_1 \\
+        =& \iint_{\mathcal{X} \times \mathcal{X}} y(\bs{x}_1) \widehat{k}_{\bs{x}_1}(\bs{\xi}_2) \widehat{y}^*(\bs{\xi}_2) \, \mathrm{d}\bs{x}_1 \mathrm{d}\bs{\xi}_2 \\
+    \intertext{ここで見易さのために関数$\widehat{k}_{\bs{x}_1}(\bs{\xi}_2) = l_{\bs{\xi}_2}(\bs{x}_1)$とおくと}
+        =& \iint_{\mathcal{X} \times \mathcal{X}} y(\bs{x}_1) l_{\bs{\xi}_2}(\bs{x}_1) \widehat{y}^*(\bs{\xi}_2) \, \mathrm{d}\bs{x}_1 \mathrm{d}\bs{\xi}_2 \\
+        =& \int_{\mathcal{X}} \langle y, l_{\bs{\xi}_2} \rangle \widehat{y}^*(\bs{\xi}_2) \, \mathrm{d}\bs{\xi}_2 \\
+    \intertext{ここで再び$\langle y, l_{\bs{\xi}_2} \rangle$に対してパーセバルの不等式を用いる．
+        新たに$\widehat{l}_{\bs{\xi}_2}(\bs{\xi}_1) = \mathcal{F}[l_{\bs{\xi}_2}](\bs{\xi}_1)$とおくと}
+        =& \int_{\mathcal{X}} \langle \widehat{y}, \widehat{l}_{\bs{\xi}_2} \rangle \widehat{y}^*(\bs{\xi}_2) \, \mathrm{d}\bs{\xi}_2 \\
+        =& \iint_{\mathcal{X} \times \mathcal{X}} \widehat{y}(\bs{\xi}_1) \widehat{l}_{\bs{\xi}_2}(\bs{\xi}_1) \widehat{y}^*(\bs{\xi}_2) \, \mathrm{d}\bs{\xi}_1 \mathrm{d}\bs{\xi}_2,
+        \label{eqn:proof_tag1}
+    \end{align}
+    となる．ここで$\widehat{l}_{\bs{\xi}_2}(\bs{\xi}_1)$を真面目に計算してみると
+    \begin{align}
+        \widehat{l}_{\bs{\xi}_2}(\bs{\xi}_1)
+        &= \iint_{\mathcal{X} \times \mathcal{X}} k(\bs{x}_1, \bs{x}_2) e^{- 2\pi i (\bs{x}_1\tran\bs{\xi}_1 - \bs{x}_2\tran\bs{\xi}_2)}
+        \, \mathrm{d}\bs{x}_1 \mathrm{d}\bs{x}_2 \\
+        &= \iint_{\mathcal{X} \times \mathcal{X}} k_{\Delta}(\bs{x}_1 - \bs{x}_2) e^{- 2\pi i (\bs{x}_1\tran\bs{\xi}_1 - \bs{x}_2\tran\bs{\xi}_2)}
+        \, \mathrm{d}\bs{x}_1 \mathrm{d}\bs{x}_2 \notag \\
+        &= \delta(\bs{\xi}_1 - \bs{\xi}_2) \widehat{k}(\bs{\xi}_1),
+    \end{align}
+    となる．これを式(\ref{eqn:proof_tag1})に戻すと
+    \begin{align}
+        =& \iint_{\mathcal{X} \times \mathcal{X}}  \widehat{y}(\bs{\xi}_1)
+        \delta(\bs{\xi}_1 - \bs{\xi}_2) \widehat{k}(\bs{\xi}_1) \widehat{y}^*(\bs{\xi}_2) \, \mathrm{d}\bs{\xi}_1 \mathrm{d}\bs{\xi}_2 \\
+        =& \int_{\mathcal{X}} \widehat{y}(\bs{\xi}) \widehat{k}(\bs{\xi}) \widehat{y}^*(\bs{\xi}) \, \mathrm{d}\bs{\xi} \\
+        =& \int_{\mathcal{X}} \| \widehat{y}(\bs{\xi}) \|^2 \, \widehat{k}(\bs{\xi}) \, \mathrm{d}\bs{\xi} \geq 0,
+    \end{align}
+    となる．これが任意の関数$y$について成立するから，$\widehat{y}(\bs{\xi})$が定数関数の場合も成立しなければならない．
+    したがって
+    \begin{equation}
+        \int_{\mathcal{X}} \widehat{k}(\bs{\xi}) \, \mathrm{d}\bs{\xi} \geq 0,
+    \end{equation}
+    が成り立つ必要がある．したがって$\widehat{k}$は$L_1$ノルムの意味で可積分である．同様に関数$\widehat{y}(\bs{\xi})$が
+    限りなくデルタ関数に近い形状の関数に対しても式(\ref{eqn:proof_tag1})が成立しなければならないから，任意の$\bs{\xi}$に対して
+    $\widehat{k}(\bs{\xi}) \geq 0$が成り立つ必要がある．したがって$\widehat{k}(\bs{\xi}) \geq 0$は非負関数である．
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE FINISH %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vim: expandtab tabstop=4 shiftwidth=4 fdm=marker
