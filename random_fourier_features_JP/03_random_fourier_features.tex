@@ -189,6 +189,32 @@ RFFはカーネル関数が$k(\bs{x} - \bs{y})$と表現できるものに限ら
           その後に推論$f(\bs{u}(\bs{x}))$を行う．
 \end{enumerate}
 
+\subsection{数値実験：RBFカーネルのRFF近似}
+
+本節では，RFFを用いてRBFカーネルが近似される様子を実際に確認してみよう．
+まずは近似前のRBFカーネルを
+\begin{equation}
+    k(x_1, x_2) \triangleq \exp \left(- \frac{\| x_1 - x_2 \|^2}{2} \right),
+\end{equation}
+とおくとしよう．このとき対応するRFFの確率密度関数は
+\begin{equation}
+    p(\omega) = \frac{1}{\sqrt{2 \pi}} \exp \left(- \frac{\| \omega \|^2}{2} \right),
+\end{equation}
+となるので，RFF近似したRBFカーネルは
+\begin{equation}
+    k_{\textrm{rff}}(x_1, x_2) \triangleq \bs{u}(x_1)\tran \bs{u}(x_2),
+    \hspace{10pt}
+    \omega_1, \ldots, \omega_L \sim p(\omega),
+\end{equation}
+となる．これを試みに$L = 10, 100, 1000$として描画してみたのが図\ref{fig:rff_approximation}である．
+RFFの次元を上げるにつれてRBFカーネルに近づいていくことが分かるであろう．
+
+\begin{figure*}[t]
+    \centerline{\includegraphics[width=540pt]{figures/kernel_approximation.pdf}}
+    \caption{RBFカーネルのRFF近似}
+    \label{fig:rff_approximation}
+\end{figure*}
+
 \subsection{深層学習との関係}
 
 最後に，RFFを用いたサポートベクターマシンと深層学習との関係性について述べておく．

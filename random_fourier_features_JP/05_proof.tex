@@ -41,10 +41,11 @@
 \end{displayquote}
 
 オイオイ，式(\ref{eqn:def_fourier_transform})が定義できる関数$f$なんてかなり少なくないかと思ったそこの読者，
-非常に良い眼をお持ちである．式(\ref{eqn:def_fourier_transform})の収束性については本文書末尾の付録で簡単に言及する．
+非常に良い眼をお持ちである．式(\ref{eqn:def_fourier_transform})の収束性については本文書末尾の付録で簡単に言及するが，
+応用上必要な関数に対しては，様々なテクニックを駆使することで収束させることができるので安心して頂きたい．
 
 次にParsevalの等式 (\textit{Parseval's identity}) について見ていこう．
-一般にParsevalの等式と言うと$\|f\|^2 = \|\widehat{f}\|^2$を指すことも多いが，本文書ではより一般的な形の定理を紹介する．
+Parsevalの等式と言うと公式$\|f\|^2 = \|\widehat{f}\|^2$を指すことが多いが，本文書ではより一般的な形の定理を紹介する．
 
 \begin{theorem}[Parsevalの等式]
     任意のFourier変換可能な関数$f$, $g$およびそのFourier変換$\widehat{f}$, $\widehat{g}$に対して
@@ -53,6 +54,7 @@
 
 ここではParsevalの等式の証明は省略する．
 証明が気になる読者は（そうあるべきである！）本文書末尾の付録を参照されたい．
+聡明な読者には無用の言であろうが，$g = f$とすれば$\|f\|^2 = \|\widehat{f}\|^2$を得る．
 
 \subsection*{定理の証明}
 

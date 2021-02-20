@@ -4,7 +4,7 @@
 # Date  : January 20, 2020
 #################################### SOURCE START ###################################
 
-docker_image   = tiskw/latex:2020-05-29
+docker_image   = tiskw/latex:2021-01-23
 docker_uidgid  = -u $(shell id -u):$(shell id -g)
 docker_volume  = -v $(shell pwd):/workspace -w /workspace
 docker_command = docker run --rm -it $(docker_uidgid) $(docker_volume) $(docker_image)
