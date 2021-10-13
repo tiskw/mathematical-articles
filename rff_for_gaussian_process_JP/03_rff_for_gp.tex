@@ -1,0 +1,164 @@
+% TeX source
+%
+% Author: Tetsuya Ishikawa <tiskw111@gmail.com>
+% Date  : October 13, 2021
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+本節ではガウス過程モデルにRFFを適用し，高速化の効果を理論的に確認します．
+
+\subsection{RFF適用前のガウス過程モデルの計算量}
+
+まずは通常のガウス過程モデルの学習および推論に要する計算量を確認しておきましょう．
+前提として，入力ベクトルの次元$M$よりも学習データ数$N$の方が十分に大きいと仮定します．
+このとき式 (\ref{eqn:gp_exp}) および (\ref{eqn:gp_cov}) のうち，学習時間のボトルネックは
+明らかに逆行列$\left( \bs{K} + \sigma^2 \bs{I} \right)^{-1}$の計算にあります．
+この行列の大きさは$N \times N$ですので，学習に要する計算量は$O(N^3)$となります．
+次に推論ですが，テスト時のボトルネックは行列積
+$\left( \bs{y} - \widehat{\bs{m}} \right)\tran \left( \bs{K} + \sigma^2 \bs{I} \right)^{-1}$
+あるいは
+$\bs{k}(\bs{\xi}_1)\tran \left( \bs{K} - \sigma^2 \bs{I} \right)^{-1} \bs{k}(\bs{\xi}_2)$
+であり，これらの行列積に要する計算量はいずれも$O(N)$となります．
+
+\subsection{予測値の期待値へのRFFの適用}
+
+さて，ではいよいよガウス過程モデルにRFFを適用します．
+まずは予測値の期待値ですが，式 (\ref{eqn:gp_exp}) にRFFの近似式 (\ref{eqn:gp_cov}) を代入すると
+\begin{equation}
+    m(\bs{\xi}) = \widehat{m}(\bs{\xi}) + \left( \bs{y} - \widehat{\bs{m}} \right)\tran
+    \left( \bs{\Phi}\tran \bs{\Phi} + \sigma^2 \bs{I} \right)^{-1} \bs{\Phi}\tran \bs{\phi}(\bs{\xi}),
+    \label{eqn:rffgp_exp_naive}
+\end{equation}
+となります．ただし行列$\bs{\Phi}$はRFFによって得られるベクトル$\bs{\phi}$を
+学習データ全てに対して並べた$D \times N$行列
+$\bs{\Phi} = (\bs{\phi}(\bs{x}_1), \ldots, \bs{\phi}(\bs{x}_N))$
+です．しかし，まだこれでは高速化は図れていません．
+式 (\ref{eqn:rffgp_exp_naive}) の計算量のボトルネックは依然として$N \times N$行列の逆行列のままです．
+
+ここで一工夫します．式 (\ref{eqn:rffgp_exp_naive}) に対して逆行列の反転補題 (\textit{binominal inverse lemma}) 
+を適用することを考えます．逆行列の反転補題とは以下の定理です．
+
+\begin{theorem}[逆行列の反転補題]
+    行列
+    $\bs{A} \in \mathbb{R^{N \times N}}$,
+    $\bs{B} \in \mathbb{R^{N \times M}}$,
+    $\bs{C} \in \mathbb{R^{M \times N}}$,
+    $\bs{D} \in \mathbb{R^{M \times M}}$
+    に対して以下が成り立つ．
+    \begin{align}
+        &\left( \bs{A} + \bs{BDC} \right)^{-1} \notag \\
+        &\hspace{10pt}
+        = \bs{A}^{-1} - \bs{A}^{-1} \bs{B} \left( \bs{D}^{-1} + \bs{CA}^{-1} \bs{B} \right)^{-1} \bs{CA}^{-1}
+        \label{eqn:bunominal_inverse_lemma}
+    \end{align}
+    ただし行列$\bs{A}$, $\bs{D}$は正則行列とする．
+\end{theorem}
+証明は本文書の末尾で行うものとし，ここではガウス過程モデルへのRFFの適用の話を先に進めさせて下さい．
+上記の補題に対して
+$\bs{A} = \sigma^2 \bs{I}$,
+$\bs{B} = \bs{\Phi}\tran$,
+$\bs{C} = \bs{\Phi}$,
+$\bs{D} = \bs{I}$
+とおけば，
+\begin{equation*}
+    \left( \bs{\Phi}\tran \bs{\Phi} + \sigma^2 \bs{I} \right)^{-1}
+    = \frac{1}{\sigma^2} \left( \bs{I} - \bs{\Phi}\tran \left( 
+    \bs{\Phi\Phi}\tran + \sigma^2 \bs{I} \right)^{-1} \bs{\Phi} \right),
+\end{equation*}
+を得ます．ここでさらに$\bs{P} = \bs{\Phi\Phi}\tran \in \mathbb{R}^{D \times D}$とおき，
+上式の両辺に右から$\bs{\Phi}$をかけると
+\begin{equation}
+    \left( \bs{\Phi}\tran \bs{\Phi} + \sigma^2 \bs{I} \right)^{-1} \bs{\Phi}
+    = \frac{1}{\sigma^2} \bs{\Phi}\tran \left(
+    \bs{I} - \left( \bs{P} + \sigma^2 \bs{I} \right)^{-1} \bs{P} \right),
+    \label{eqn:rff_key_eqn}
+\end{equation}
+を得ます．したがって式 (\ref{eqn:rffgp_exp_naive}) は
+\begin{equation}
+    m(\bs{\xi}) = \widehat{m}(\bs{\xi}) + \frac{1}{\sigma^2}
+    \left( \bs{y} - \widehat{\bs{m}} \right)\tran \bs{\Phi}\tran \bs{S},
+    \label{eqn:rffgp_exp}
+\end{equation}
+と書き改めることができます．ただし
+\begin{equation}
+    \bs{S} = \bs{I} - \left( \bs{P} + \sigma^2 \bs{I} \right)^{-1} \bs{P},
+    \label{eqn:rffgp_exp_cache}
+\end{equation}
+です．
+
+聡明なる読者は，すでにボトルネックが解消されていることにお気付きのことと思います．
+式 (\ref{eqn:rffgp_exp_naive}) のボトルネックであった逆行列$( \bs{K} + \sigma^2 \bs{I})^{-1}$は，
+式 (\ref{eqn:rffgp_exp}), (\ref{eqn:rffgp_exp_cache}) では $( \bs{P} + \sigma^2 \bs{I})^{-1}$となり，
+行列のサイズは$D \times D$になりました．通常，RFFの次元$D$は学習データの総数$N$よりも十分小さく設定しますので，
+もはやこの逆行列の計算はボトルネックではなくなりました．
+式 (\ref{eqn:rffgp_exp}), (\ref{eqn:rffgp_exp_cache}) のボトルネックは行列積
+$\bs{P} = \bs{\Phi\Phi}\tran$であり，この計算量は$O(ND^2)$です．
+元のガウス過程モデルの学習に要する計算量が$O(N^3)$であったことを振り返れば，
+RFFによってかなりの高速化が達成できたことになります．
+
+\subsection{予測値の共分散へのRFFの適用}
+
+次に予測値の共分散 (\ref{eqn:gp_cov}) にRFFを適用していきましょう．
+式 (\ref{eqn:gp_cov}) に対してRFFの近似式 (\ref{eqn:gp_cov}) を代入し，さらに
+式 (\ref{eqn:rff_key_eqn}) を適用すると
+\begin{align}
+    v(\bs{\xi}_1, \bs{\xi}_2)
+    &= \bs{\phi}(\bs{\xi}_1)\tran \bs{\phi}(\bs{\xi}_2)
+    - \frac{1}{\sigma^2} \bs{\phi}(\bs{\xi}_1)\tran \bs{PS} \bs{\phi}(\bs{\xi}_2)
+    \notag \\
+    &= \bs{\phi}(\bs{\xi}_1)\tran
+    \left( \bs{I} - \frac{1}{\sigma^2} \bs{PS} \right)
+    \bs{\phi}(\bs{\xi}_2),
+    \label{eqn:rffgp_cov}
+\end{align}
+となります．式 (\ref{eqn:rffgp_cov}) のボトルネックは，
+予測値の期待値と同様に行列積$\bs{P} = \bs{\Phi\Phi}\tran$であり，この計算量は$O(ND^2)$です．
+
+ここで，RFFを適用した後のガウス過程モデルの学習および推論の手順を
+疑似コードとしてAlgorithm \ref{alg:rffgp_train}, \ref{alg:rffgp_infer}にまとめておきます．
+ただしAlgorithm \ref{alg:rffgp_train}, \ref{alg:rffgp_infer}では簡単のために事前分布を0としています．
+
+\begin{algorithm}[t]
+    \caption{\textgt{\bf RFF適用後のガウス過程モデルの学習}}
+    \label{alg:rffgp_train}
+    \KwData{$\mathcal{D} = \left\{ (\bs{x}_n, y_n) \right\}_{n=1}^{N}$, \, $\sigma \in \mathbb{R}^{+}$}
+    \KwResult{$\bs{c}_\mathrm{m} \in \mathbb{R}^D$, \, $\bs{C}_\mathrm{v} \in \mathbb{R}^{D \times D}$}
+    $\bs{y} \gets (y_1, \ldots, y_N)\tran$ \\
+    $\bs{\Phi} \gets (\bs{\phi}(\bs{x}_1), \ldots, \bs{\phi}(\bs{x}_N))$ \\
+    $\bs{P} \gets \bs{\Phi\Phi}\tran$ \\
+    $\bs{S} \gets \bs{I} - \left( \bs{P} + \sigma^2 \bs{I} \right)^{-1} \bs{P}$ \\
+    $\bs{c}_\mathrm{m} \gets \frac{1}{\sigma^2} \bs{y}\tran \bs{\Phi}\tran \bs{S}$
+    \hfill\Comment{\textgt{\footnotesize 予測値の期待値の算出に使用}\hspace*{-36pt}\mbox{}}
+    $\bs{C}_\mathrm{v} \gets \bs{I} - \frac{1}{\sigma^2} \bs{PS}$
+    \hfill\Comment{\textgt{\footnotesize 予測値の共分散の算出に使用}\hspace*{-33pt}\mbox{}}
+\end{algorithm}
+
+\begin{algorithm}[t]
+    \caption{\textgt{\bf RFF適用後のガウス過程モデルの推論}}
+    \label{alg:rffgp_infer}
+    \KwData{$\bs{\xi} \in \mathbb{R}^M$, \, $\bs{c}_\mathrm{m} \in \mathbb{R}^D$, \, $\bs{C}_\mathrm{v} \in \mathbb{R}^{D \times D}$}
+    \KwResult{$\mu \in \mathbb{R}$, $\eta \in \mathbb{R}$}
+    $\bs{z} \gets \bs{\phi}(\bs{\xi})$ \\
+    $\mu \gets \bs{c}_\mathrm{m} \bs{z}$
+    \hfill\Comment{\textgt{\footnotesize 予測値の期待値の算出}\hspace*{-80pt}\mbox{}}
+    $\eta \gets \bs{z}\tran \bs{C}_\mathrm{v} \bs{z}$
+    \hfill\Comment{\textgt{\footnotesize 予測値の共分散の算出}\hspace*{-68pt}\mbox{}}
+\end{algorithm}
+
+最後に，RFFを適用した後の計算量を表\ref{tab:gp_complexity}に整理しました．
+ただし$N \in \mathbb{Z}^+$は学習データの総数，$D \in \mathbb{Z}^+$はRFFの次元です．
+
+\begin{table}[t]
+    \caption{RFF適用前後でのガウス過程モデルの計算量}
+    \label{tab:gp_complexity}
+    \begin{center}\begin{tabular}{ccc}
+        \hline
+         & 学習 & 推論 \\
+        \hline
+        RFF適用前 & $O(N^3)$   & $O(N)$    \\  
+        RFF適用後 & $O(N D^2)$ & $O(D^2)$  \\
+        \hline
+    \end{tabular}\end{center}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE FINISH %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vim: expandtab tabstop=4 shiftwidth=4 fdm=marker
