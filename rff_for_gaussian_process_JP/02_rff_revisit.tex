@@ -1,0 +1,35 @@
+% TeX source
+%
+% Author: Tetsuya Ishikawa <tiskw111@gmail.com>
+% Date  : October 13, 2021
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+本節ではRFFの概要について述べます．
+こちらも残念ながら詳細について述べる紙面的余裕がありませんので，
+詳細をお知りになりたい場合は原論文 \cite{Rahimi2007} をご参照下さい．
+
+関数$k: \mathbb{R}^M \times \mathbb{R}^M \to \mathbb{R}$をカーネル関数とします．
+カーネル関数$k$をFourier変換することで
+\begin{equation}
+    k(\bs{x}_1, \bs{x}_2) \simeq \bs{\phi}({\bs{x}_1})\tran \bs{\phi}({\bs{x}_2}),
+    \label{eqn:rff_kernel_approx}
+\end{equation}
+という近似式を求めるのがRFFです．このとき右辺のベクトル$\bs{\phi}(\bs{x}_1)$の次元$D$は任意に設定することができ，
+次元$D$が大きいほど式 (\ref{eqn:rff_kernel_approx}) の近似精度が高い一方で，次元$D$を大きくすると計算量が多くなります．
+
+具体例をひとつ挙げておきましょう．カーネル関数のひとつとして有名なRBFカーネルは
+\begin{equation}
+    k(\bs{x}_1, \bs{x}_2) = \exp \left( - \gamma \| \bs{x}_1 - \bs{x}_2 \|^2 \right),
+\end{equation}
+と与えられます．このRBFカーネルに対してRFFを適用すると
+\begin{equation}
+    \bs{\phi}(\bs{x}) = \begin{pmatrix}
+        \cos \bs{Wx} \\
+        \sin \bs{Wx}
+    \end{pmatrix},
+\end{equation}
+となります．ただし行列$\bs{W} \in \mathbb{R}^{D/2 \times M}$は，
+各要素を正規分布$\mathcal{N}(0, \frac{1}{4 \gamma})$にしたがってサンプリングしたランダム行列です．
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE FINISH %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vim: expandtab tabstop=4 shiftwidth=4 fdm=marker

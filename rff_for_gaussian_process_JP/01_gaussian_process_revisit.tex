@@ -1,0 +1,58 @@
+% TeX source
+%
+% Author: Tetsuya Ishikawa <tiskw111@gmail.com>
+% Date  : October 13, 2021
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+本節ではガウス過程モデルの概要について述べます．
+残念ながら本文書ではガウス過程モデルの定式化や導出などの詳細は扱いませんので，
+詳細にご興味のある読者は Rasmussen~\cite{Rasmussen2006} あるいは赤穂~\cite{Akaho2018}をご参照下さい．
+
+学習データを$\mathcal{D} = \{ (\bs{x}_n, y_n) \}_{n=1}^{N}$，
+ラベルの観測誤差の標準偏差を$\sigma \in \mathbb{R}^{+}$とします．
+ただし$\bs{x}_n \in \mathbb{R}^M$, $y_n \in \mathbb{R}$とします．
+このときガウス過程モデルは，テストデータ$\bs{\xi} \in \mathbb{R}^M$の予測値の期待値を
+\begin{equation}
+    m(\bs{\xi}) = \widehat{m}(\bs{\xi}) + \left( \bs{y} - \widehat{\bs{m}} \right)\tran
+      \left( \bs{K} + \sigma^2 \bs{I} \right)^{-1} \bs{k}(\bs{\xi}),
+    \label{eqn:gp_exp}
+\end{equation}
+で与え，さらにテストデータ$\bs{\xi}_1$, $\bs{\xi}_2$の予測値の共分散を
+\begin{equation}
+    v(\bs{\xi}_1, \bs{\xi}_2) = k(\bs{\xi}_1, \bs{\xi}_2)
+    - \bs{k}(\bs{\xi}_1)\tran \left( \bs{K} - \sigma^2 \bs{I} \right)^{-1} \bs{k}(\bs{\xi}_2),
+    \label{eqn:gp_cov}
+\end{equation}
+で与えます．ただし関数$k: \mathbb{R}^M \times \mathbb{R}^M \to \mathbb{R}$はカーネル関数，
+行列$\bs{K} \in \mathbb{R}^{N \times N}$は
+\begin{equation}
+    \bs{K} = \begin{pmatrix}
+        k(\bs{x}_1, \bs{x}_1) & \cdots & k(\bs{x}_1, \bs{x}_N) \\
+        \vdots                & \ddots & \vdots                \\
+        k(\bs{x}_N, \bs{x}_1) & \cdots & k(\bs{x}_N, \bs{x}_N) \\
+    \end{pmatrix},
+\end{equation}
+で与えられる行列，ベクトル$\bs{k}(\bs{\xi}) \in \mathbb{R}^N$は
+\begin{equation}
+    \bs{k}(\bs{\xi}) = \begin{pmatrix}
+        k(\bs{\xi}, \bs{x}_1) \\
+        \vdots                \\
+        k(\bs{\xi}, \bs{x}_N) \\
+    \end{pmatrix},
+\end{equation}
+です．ベクトル$\bs{y} \in \mathbb{R}^N$は学習データのラベルをベクトル状に並べたものであり，
+$\bs{y} = (y_1, y_2, \ldots, y_N)\tran$です．
+また$\widehat{m}(\bs{\xi})$は予測値の事前分布であり，$\widehat{\bs{m}}$は学習データの予測値の事前分布を
+ベクトル状に並べたものです．特に事前分布を設定する必要がない場合は$\widehat{m}(\cdot) 
+= 0$, $\widehat{\bs{m}} = \bs{0}$とするのが一般的です．
+
+テストデータ$\bs{\xi}$の予測値の分散を求めるためには，共分散を求める式 (\ref{eqn:gp_cov}) において
+$\bs{\xi}_1 =\bs{\xi}_2 = \bs{\xi}$とすれば良く，
+\begin{equation}
+    v(\bs{\xi}, \bs{\xi}) = k(\bs{\xi}, \bs{\xi})
+    - \bs{k}(\bs{\xi})\tran \left( \bs{K} - \sigma^2 \bs{I} \right)^{-1} \bs{k}(\bs{\xi}),
+\end{equation}
+となります．
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOURCE FINISH %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vim: expandtab tabstop=4 shiftwidth=4 fdm=marker
