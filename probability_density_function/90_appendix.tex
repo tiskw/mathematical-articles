@@ -1,0 +1,64 @@
+% TeX source
+%
+% Author: Tetsuya Ishikawa <tiskw111@gmail.com>
+
+
+\subsection{逆行列の反転補題の証明}
+
+逆行列の反転補題を再掲し，証明します．
+
+\begin{theorem}[逆行列の反転補題]
+    行列
+    $\bs{A} \in \mathbb{R^{N \times N}}$,
+    $\bs{B} \in \mathbb{R^{N \times M}}$,
+    $\bs{C} \in \mathbb{R^{M \times N}}$,
+    $\bs{D} \in \mathbb{R^{M \times M}}$
+    に対して以下が成り立つ．
+    \begin{align*}
+        &\left( \bs{A} + \bs{BDC} \right)^{-1} \\
+        &\hspace{10pt}
+        = \bs{A}^{-1} - \bs{A}^{-1} \bs{B} \left( \bs{D}^{-1} + \bs{CA}^{-1} \bs{B} \right)^{-1} \bs{CA}^{-1}
+    \end{align*}
+    ただし行列$\bs{A}$, $\bs{D}$は正則行列とする．
+\end{theorem}
+\begin{proof}
+以下の等式が成立する．
+\begin{align*}
+    \begin{pmatrix}
+        \bs{A} & \bs{B} \\
+        \bs{C} & \bs{D}
+    \end{pmatrix}^{-1}
+    &= \begin{pmatrix}
+        \bs{A}^{-1} + \bs{A}^{-1}\bs{BSCA}^{-1} & - \bs{A}^{-1}\bs{BS} \\
+        - \bs{SCA}^{-1}                         & \bs{S}
+    \end{pmatrix} \\
+    &= \begin{pmatrix}
+        \bs{T}                & - \bs{TBD}^{-1} \\
+        - \bs{D}^{-1} \bs{CT} & \bs{D}^{-1} + \bs{D}^{-1} \bs{CTBD}^{-1}
+    \end{pmatrix},
+\end{align*}
+ただし
+\begin{align}
+    \bs{T} &= \left( \bs{D} - \bs{CA}^{-1} \bs{B} \right)^{-1}, \\
+    \bs{S} &= \left( \bs{A} - \bs{BD}^{-1} \bs{C} \right)^{-1},
+\end{align}
+とする．これは直接計算により明らか．さて，上記ブロック行列の対応する箇所を比較することで
+\begin{align}
+    \bs{T} &= \bs{A}^{-1} + \bs{A}^{-1}\bs{BSCA}^{-1},
+    \label{eqn:binominal_theorem_proof_1} \\
+    \bs{S} &= \bs{D}^{-1} + \bs{D}^{-1} \bs{CTBD}^{-1}, \\
+    - \bs{A}^{-1} \bs{BS} &= - \bs{TBD}^{-1}, \\
+    - \bs{SCA}^{-1} &= - \bs{D}^{-1} \bs{CT},
+\end{align}
+を得る．式 (\ref{eqn:binominal_theorem_proof_1}) に対して
+\begin{center}
+    $\bs{A} \to \bs{D}^{-1}$, \hspace{5pt}
+    $\bs{B} \to - \bs{C}$, \hspace{5pt}
+    $\bs{C} \to \bs{B}$, \hspace{5pt}
+    $\bs{D} \to \bs{A}$,
+\end{center}
+と置き直せば，証明すべき式を得る．
+\end{proof}
+
+
+% vim: expandtab tabstop=4 shiftwidth=4 fdm=marker

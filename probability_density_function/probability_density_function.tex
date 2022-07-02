@@ -1,0 +1,93 @@
+% TeX source
+
+
+\documentclass[uplatex, twocolumn, a4paper, 10pt, dvipdfmx]{jsarticle}
+
+\usepackage[dvipdfm,width=190truemm,height=270truemm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{helvet}
+\usepackage[ipaex, unicode]{pxchfon}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{thmbox}
+\usepackage{csquotes}
+\usepackage{algorithm2e}
+\usepackage{algorithmic}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+
+\pagestyle{fancy}
+\lhead{}
+\rhead{}
+\cfoot{-- {\thepage} --}
+\rfoot{\small\tt\textcolor{lightgray}{T.~Ishikawa}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\allowdisplaybreaks
+
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\mbar}{\hspace{1pt}\bigm|\hspace{1pt}}
+\newcommand{\tran}{^{\mkern-1.5mu\mathsf{T}}}
+\DeclareMathOperator*{\sgn}{sgn}
+\DeclareMathOperator*{\Sgn}{Sgn}
+\DeclareMathOperator*{\argmin}{argmin}
+
+\newtheorem[M]{theorem}{定理}[section]
+\newtheorem[M]{definition}[theorem]{定義}
+\newtheorem[M]{lemma}[theorem]{補題}
+
+\renewenvironment{proof}%
+{\textsf{証明}：}{\hfill$\blacksquare$\vspace*{8pt}}
+
+\RestyleAlgo{ruled}
+\SetKwComment{Comment}{/* }{ */}
+
+\newcommand{\titlebar}{
+\setlength\unitlength{1truemm}
+\vspace*{-19pt}
+\begin{picture}(88,0)(0,0)
+\put(-4,0){\line(1,0){93}}
+\put(89,0){\circle*{1}}
+\end{picture}}
+
+\begin{document}
+
+\title{\textsf{\bfseries 確率密度関数の定義再訪}}
+\author{石川 徹也 \quad \texttt{<tiskw111@gmail.com>}}
+\date{2022年6月26日}
+\maketitle
+\thispagestyle{fancy}
+
+\section*{はじめに}
+\titlebar
+\input{00_introduction.tex}
+
+\section{古典的確率論の破綻}
+\titlebar
+\input{01_classical_probability.tex}
+
+\section{Reimann積分論的確率論}
+\titlebar
+\input{02_reimann_probability_theory.tex}
+
+\section{確率密度関数}
+\titlebar
+\input{03_probability_density_function.tex}
+
+\section{累積分布関数との関係}
+\titlebar
+\input{04_cumulative_distribution_function.tex}
+
+\section*{おわりに}
+\titlebar
+\input{98_closing.tex}
+
+% \pagebreak
+
+\input{99_bibliography.tex}
+
+\end{document}
+
+
+% vim: expandtab tabstop=4 shiftwidth=4 fdm=marker

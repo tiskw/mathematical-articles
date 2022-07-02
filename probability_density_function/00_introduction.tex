@@ -1,0 +1,63 @@
+% TeX source
+
+
+現代の確率論は，その歴史的過程により，測度論を用いて高度に形式化されています．
+形式化されること自体は，厳密さを尊ぶ現代数学の理念に叶うものであり，大いに歓迎されるべきなのですが，
+その一方で，残念なことに，過度な形式化は概念の本質を覆い隠してしまうことがあります．
+その最たるもののひとつが，確率密度関数です．
+
+今，試みに確率の書籍を開いて確率密度関数の定義を見てみましょう．
+伊藤~\cite{Ito2004} には次のように定義されています．
+
+\begin{theorem}{確率密度関数の定義}
+    \label{thm:prob_density_func_formal}
+    確率空間 $(\Omega, \mathcal{F}, P)$ を考える．
+    Radon–Nikodym の定理より，任意の事象 $E \in \mathcal{F}$ に対し
+    \begin{equation}
+        P(E) = \int_E p(\omega) \mathrm{d} \mu(\omega),
+    \end{equation}
+    をみたす関数 $p(\omega)$ が存在する（Radon–Nikodym 微分）．
+    これを確率測度 $P$ の確率密度と呼ぶ．これは微分形
+    \begin{equation}
+        p(\omega) \triangleq \frac{\mathrm{d} P}{\mathrm{d} \mu}(\omega),
+    \end{equation}
+    で表されることもある．
+\end{theorem}
+
+上記は任意の確率空間に対して適用できるよう抽象化された表現であり，さすがにちょっと分かりにくいので，
+実数体に値を取る確率変数 $X$ に限定した表現に直してみましょう．
+詳細は省略しますが，実数値確率変数 $X$ の場合，上記の確率密度関数は
+
+\begin{equation}
+    p_X(x) \triangleq \frac{\mathrm{d} P(X \leq x)}{\mathrm{d} x},
+    \label{eqn:def_pdf_1}
+\end{equation}
+
+と書くことができます．累積分布関数 $f_X(x) \triangleq P(X \leq x)$ を導入すれば
+
+\begin{equation}
+    p_X(x) \triangleq \frac{\mathrm{d} f_X}{\mathrm{d} x},
+    \label{eqn:def_pdf_2}
+\end{equation}
+
+と表現するのと同じことです（何となく抽象的な定義の微分形に似ていることが分かるかと思います）．
+
+ある程度確率論に慣れた経験者にとって，式 (\ref{eqn:def_pdf_1}) や 式 (\ref{eqn:def_pdf_2}) は
+「なるほど上手く定義したものだ」と思える代物だと思います．
+ですが，そもそも確率密度関数の意味を知らない確率論の初学者に
+式 (\ref{eqn:def_pdf_1}) や 式 (\ref{eqn:def_pdf_2}) を見せたところで
+
+\begin{center}
+    \gt 「で，確率密度関数って結局何なの？」
+\end{center}
+
+という疑問が浮かぶだけでありましょう．このような疑問が浮かぶのも至極当然です．
+式 (\ref{eqn:def_pdf_1}) や 式 (\ref{eqn:def_pdf_2}) は，形式的に数学を構築していくには大変都合の良い定義ですが，
+確率密度関数とは何かという本質的な問いには全く答えていない式だからです．これが過度な形式化の弊害なのです．
+
+本文書の目的は「確率密度関数とは何か？」という疑問に対し，定義式を見せる以外の手段で回答を試みることにあります．
+もし本文書を読み終えて式 (\ref{eqn:def_pdf_1}) を見直したとき，少しでも「なるほど上手い定義式だ」と感じて
+頂けたのであれば，本文書は成功だと言えるでしょう．
+
+
+% vim: expandtab tabstop=4 shiftwidth=4 fdm=marker
